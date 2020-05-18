@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "lib": ["es5", "es6", "dom"],
+        "esModuleInterop": true,
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./build",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "types": ["reflect-metadata"],
+
+        "forceConsistentCasingInFileNames": true,
+        "strict": true
+    }
+}

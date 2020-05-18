@@ -1,0 +1,21 @@
+{
+   "type": "mssql",
+   "host": "localhost",
+   "username": "cdb",
+   "password": "cdb",
+   "database": "cdb",
+   "synchronize": false,
+   "logging": false,
+   "options": {
+      "enableArithAbort": true
+    },
+   "entities": [
+      "src/entity/**/*.ts"
+   ],
+   "migrations": [
+      "src/migration/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ]
+}
