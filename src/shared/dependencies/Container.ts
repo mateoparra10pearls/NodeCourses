@@ -1,14 +1,18 @@
 import { Container } from "inversify";
-import { IUserRepository, UserRepository } from "../repositories/UserRepository";
+import { IUserRepository, UserRepository } from "../../repositories/UserRepository";
 import { TYPES } from "./Types";
-import { IBaseRepository } from "../repositories/interfaces/IBaseRepository";
-import { IConnectionApp } from "../repositories/interfaces/IConnection";
-import ConnectionApp from "./ConnectionApp";
-import { Entity } from "./Constants";
+import { IConnectionApp } from "../interfaces/IConnectionApp";
+import ConnectionApp from "../connection/ConnectionApp";
+import { Entity } from "../Constants";
+import { IUserController } from "../../controllers/interfaces/IUserController";
+import UserController from "../../controllers/UserController";
 
 let DIContainer =  new Container();
 
 type ConfigEntity = string;
+
+// Controllers
+DIContainer.bind<IUserController>(TYPES.IUserController).to(UserController);
 
 // Repositories
 DIContainer.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);

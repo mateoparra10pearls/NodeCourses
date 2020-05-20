@@ -22,6 +22,9 @@ export class Section {
   @Column("time", { name: "time" })
   time: Date | undefined;
 
+  @Column("bit", { name: "isDeleted" })
+  isDeleted: boolean | undefined;
+
   @ManyToOne(() => Course, (course) => course.sections)
   @JoinColumn([{ name: "idCourse", referencedColumnName: "id" }])
   idCourse: Course | undefined;

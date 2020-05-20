@@ -16,6 +16,9 @@ export class Role {
   @Column("varchar", { name: "name", length: 500 })
   name: string | undefined;
 
+  @Column("bit", { name: "isDeleted" })
+  isDeleted: boolean | undefined;
+
   @OneToMany(() => User, (user) => user.idRole)
   users: User[] | undefined;
 }

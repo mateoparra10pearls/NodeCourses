@@ -17,9 +17,11 @@ export class User {
   @Column("nvarchar", { name: "email", length: 255 })
   email: string | undefined;
 
+  @Column("bit", { name: "isDeleted" })
+  isDeleted: boolean | undefined;
+
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn([{ name: "idRole", referencedColumnName: "id" }])
-  @Column()
   idRole: Role | undefined;
 
   @OneToMany(() => UserSection, (userSection) => userSection.idUser)

@@ -1,54 +1,49 @@
 // import all interfaces
 import { IBaseRepository } from "./interfaces/IBaseRepository";
-import { IConnectionApp } from "./interfaces/IConnection";
-import { injectable, inject, unmanaged, named } from "inversify";
-import { TYPES } from "../shared/Types";
-import { Entity } from "../shared/Constants";
-import {
-  Repository,
-  getRepository,
-  Connection,
-  createConnection,
-} from "typeorm";
+import { IConnectionApp } from "../shared/interfaces/IConnectionApp";
+import { injectable, unmanaged } from "inversify";
+import { Connection, Repository } from "typeorm";
 
 // that class only can be extended
 @injectable()
 abstract class BaseRepository<T> implements IBaseRepository<T> {
   private _connectionApp: IConnectionApp;
-  private _repositoryName: string;
-  constructor(connectionApp: IConnectionApp, repositoryName: string) {
+  private _repository!: Repository<any>;
+  constructor(
+    connectionApp: IConnectionApp, 
+    repositoryName: string) {
     this._connectionApp = connectionApp;
-    this._repositoryName = repositoryName;
+    this._connectionApp.getEntityRepository(repositoryName).then((repo) => this._repository = repo);
   }
 
-  create(item: T): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-  update(id: string, item: T): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-  delete(id: string): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-  async find(item: T): Promise<T[]> {
-    throw new Error("Method not implemented.");
+  create = async (item: T): Promise<boolean> => {
+    await this._repository.save(item);
+    return false;
   }
 
-  findOne(id: string): Promise<T> {
-    throw new Error("Method not implemented.");
+  update = async (id: number, item: T): Promise<boolean>  => {
+    let data = await this._repository.findOne(id);
+    if (data) {    
+      await this._repository.save(data);
+      return true;
+    }
+
+    return false;
+  }
+  
+  delete = async (id: number) => {
+    let data = await this._repository.findOne(id);
+    data.isDeleted = true;
+    await this._repository.save(data);
+  }
+
+  findOne = async (id: number): Promise<T> => {    
+    let data = <T>await this._repository.findOne(id);
+    return data;
   }
 
   findAll = async (): Promise<T[]> => {
-    const connection = await this._connectionApp.getConnection();
-    const repo = <Repository<any>>(
-      await connection.getRepository(this._repositoryName)
-    );
-    // let data = <T[]>await connection.getRepository(this._repositoryName).find();
-    // await connection.close();
-    //const repo = getRepository(this._repositoryName);
-    let data = <T[]>await repo.find();
-    console.log(`data: ${data}`);
-    await connection.close();
+    let data = <T[]>await this._repository.find();
     return data;
   };
 }
