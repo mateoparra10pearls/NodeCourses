@@ -1,16 +1,16 @@
-import { User } from "../entity/User"
 import { injectable, inject, named } from "inversify";
 import BaseRepository from "./base/BaseRepository";
 import { TYPES } from "../shared/dependencies/Types";
 import { Entity } from "../shared/Constants";
+import { Course } from "../entity/Course";
 import { IBaseRepository } from "./base/IBaseRepository";
 
 @injectable()
-class UserRepository extends BaseRepository<User> implements IBaseRepository<User> {
+class CourseRepository extends BaseRepository<Course> implements IBaseRepository<Course>{
     constructor(
-      @inject(TYPES.ConfigEntity) @named(Entity.User) entity: string) {
+      @inject(TYPES.ConfigEntity) @named(Entity.Course) entity: string) {
       super(entity);      
     }
 }
 
-export { UserRepository };
+export { CourseRepository };

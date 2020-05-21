@@ -2,17 +2,15 @@ import {
   Column,
   Entity,
   Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
+  OneToMany
 } from "typeorm";
 import { Category } from "./Category";
+import BaseEntity from "../shared/database/BaseEntityApp";
+import BaseEntityApp from "../shared/database/BaseEntityApp";
 
 @Index("PK_categoryType", ["id"], { unique: true })
 @Entity("categoryType", { schema: "dbo" })
-export class CategoryType {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  id: number | undefined;
-
+export class CategoryType extends BaseEntityApp {
   @Column("varchar", { name: "name", length: 500 })
   name: string | undefined;
 

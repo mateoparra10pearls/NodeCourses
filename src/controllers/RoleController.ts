@@ -2,17 +2,17 @@ import express, { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../shared/dependencies/Types";
 import { ErrorMessages } from "../shared/Constants";
-import { User } from "../entity/User";
 import { IBaseController } from "./base/IBaseController";
 import { IBaseService } from "../services/base/IBaseService";
+import { Role } from "../entity/Role";
 
 @injectable()
-class UserController implements IBaseController {
-  public path = "/users";
+class RoleController implements IBaseController {
+  public path = "/roles";
   public router = express.Router();
-  private _service: IBaseService<User>;
+  private _service: IBaseService<Role>;
 
-  constructor(@inject(TYPES.UserService) service: IBaseService<User>) {
+  constructor(@inject(TYPES.RoleService) service: IBaseService<Role>) {
     this.intializeRoutes();
     this._service = service;
   }
@@ -24,8 +24,8 @@ class UserController implements IBaseController {
   }
 
   get = async (req: Request, res: Response): Promise<any> => {
-    const users = await this._service.get();
-    return res.status(200).json({users});
+    const result = await this._service.get();
+    return res.status(200).json(result);
   }
 
   getOne = async (req: Request, res: Response): Promise<any> => {
@@ -36,19 +36,16 @@ class UserController implements IBaseController {
     }
 
     const result = await this._service.getOne(id);
-    return res.status(200).json({result});
+    return res.status(200).json(result);
   }
 
   save = async (req: Request, res: Response): Promise<any> => {
     // Retrieve the tag from our URL path
-    const result = <User>req.body;
-    if (result.password) {
-      // Encrypt password
-    }
-
-    await this._service.save(result);
-    return res.status(200).json({result});
+    const data = <Role>req.body;
+    
+    const result = await this._service.save(data);
+    return res.status(200).json(result);
   }
 }
 
-export default UserController;
+export default RoleController;

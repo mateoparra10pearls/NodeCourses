@@ -4,18 +4,15 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+  OneToMany
 } from "typeorm";
 import { CategoryType } from "./CategoryType";
 import { Course } from "./Course";
+import BaseEntityApp from "../shared/database/BaseEntityApp";
 
 @Index("PK_category", ["id"], { unique: true })
 @Entity("category", { schema: "dbo" })
-export class Category {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  id: number | undefined;
-
+export class Category extends BaseEntityApp {
   @Column("varchar", { name: "name", length: 500 })
   name: string | undefined;
 

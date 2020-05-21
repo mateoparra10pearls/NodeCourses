@@ -2,14 +2,16 @@ import "reflect-metadata";
 import App from "./App";
 import { TYPES } from "./shared/dependencies/Types";
 import { DIContainer } from "./shared/dependencies/Container";
-import { IUserController } from "./controllers/interfaces/IUserController";
 import { createConnection } from "typeorm";
+import { IBaseController } from "./controllers/base/IBaseController";
+import { User } from "./entity/User";
 
 const initialize = () => {
   createConnection()
     .then(() => {
       const app = new App(
-        [DIContainer.get<IUserController>(TYPES.IUserController)],
+        [DIContainer.get<IBaseController>(TYPES.UserController),
+          DIContainer.get<IBaseController>(TYPES.RoleController)],
         5000
       );
 

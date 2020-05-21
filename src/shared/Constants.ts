@@ -3,10 +3,13 @@ export const Entity = {
   Course: "Course",
   Section: "Section",
   UserSection: "UserSection",
-  Role: "Role"
+  Role: "Role",
+  Category: "Category",
+  CategoryType: "CategoryType",
+  Tag: "CategoryType",
+  CourseTag: "CourseTag"
 }
 
-export const InterfaceName = {
-  IUserRepository: "IUserRepository",
-  IConnectionApp: "IConnectionApp"
+export const ErrorMessages = {
+  BadFormat: "Bad Format"
 }

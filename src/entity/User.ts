@@ -3,22 +3,25 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+  OneToMany
 } from "typeorm";
 import { Role } from "./Role";
 import { UserSection } from "./UserSection";
+import BaseEntityApp from "../shared/database/BaseEntityApp";
 
 @Entity("user", { schema: "dbo" })
-export class User {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  id: number | undefined;
-
+export class User extends BaseEntityApp{
   @Column("nvarchar", { name: "email", length: 255 })
   email: string | undefined;
 
-  @Column("bit", { name: "isDeleted" })
-  isDeleted: boolean | undefined;
+  @Column("varchar", { name: "firstName", length: 200 })
+  firstName: string | undefined;
+
+  @Column("varchar", { name: "lastName", length: 200 })
+  lastName: string | undefined;
+
+  @Column("varchar", { name: "password", nullable: true, length: 500 })
+  password: string | null | undefined;
 
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn([{ name: "idRole", referencedColumnName: "id" }])

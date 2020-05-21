@@ -4,26 +4,21 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+  OneToMany
 } from "typeorm";
 import { Course } from "./Course";
 import { UserSection } from "./UserSection";
+import BaseEntityApp from "../shared/database/BaseEntityApp";
 
 @Index("PK_section", ["id"], { unique: true })
 @Entity("section", { schema: "dbo" })
-export class Section {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  id: number | undefined;
+export class Section extends BaseEntityApp{
 
   @Column("varchar", { name: "name", length: 500 })
   name: string | undefined;
 
   @Column("time", { name: "time" })
   time: Date | undefined;
-
-  @Column("bit", { name: "isDeleted" })
-  isDeleted: boolean | undefined;
 
   @ManyToOne(() => Course, (course) => course.sections)
   @JoinColumn([{ name: "idCourse", referencedColumnName: "id" }])
