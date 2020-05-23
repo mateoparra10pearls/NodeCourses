@@ -21,6 +21,7 @@ const TYPES = {
     SectionRepository: Symbol.for("SectionRepository"),
     TagRepository: Symbol.for("TagRepository"),
     UserSectionRepository: Symbol.for("UserSectionRepository"),
+    HashRepository: Symbol.for("HashRepository"),
 
     // Services
     UserService: Symbol.for("UserService"),
@@ -32,6 +33,7 @@ const TYPES = {
     SectionService: Symbol.for("SectionService"),
     TagService: Symbol.for("TagService"),
     UserSectionService: Symbol.for("UserSectionService"),
+    HashService: Symbol.for("HashService"),
 
     //Shared
     ConfigEntity: Symbol.for("ConfigEntity"),

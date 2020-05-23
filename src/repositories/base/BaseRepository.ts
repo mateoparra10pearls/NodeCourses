@@ -2,12 +2,11 @@
 import { IBaseRepository } from "./IBaseRepository";
 import { injectable } from "inversify";
 import { Repository, getRepository } from "typeorm";
-import BaseEntityApp from "../../shared/database/BaseEntityApp";
 
 // that class only can be extended
 @injectable()
 abstract class BaseRepository<T> implements IBaseRepository<T> {
-    private _repository!: Repository<any>;
+    public _repository!: Repository<any>;
   constructor(
     repositoryName: string) {
     this._repository = getRepository(repositoryName);
@@ -39,6 +38,11 @@ abstract class BaseRepository<T> implements IBaseRepository<T> {
     let result = <T[]>await this._repository.find();
     return result;
   };
+
+  findObject = async(obj: any): Promise<T[]> => {
+    let result = <T[]>await this._repository.find(obj);
+    return result;
+  }
 }
 
 export default BaseRepository;

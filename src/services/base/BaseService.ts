@@ -1,7 +1,6 @@
 import { IBaseService } from "./IBaseService";
 import { injectable } from "inversify";
 import { IBaseRepository } from "../../repositories/base/IBaseRepository";
-import BaseEntityApp from "../../shared/database/BaseEntityApp";
 
 @injectable()
 abstract class BaseService<T> implements IBaseService<T> {

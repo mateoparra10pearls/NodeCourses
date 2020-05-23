@@ -42,6 +42,10 @@ import { TagService } from "../../services/TagService";
 import { UserSectionService } from "../../services/UserSectionService";
 import EmailSender from "../utils/EmailSender";
 import { IEmailSender } from "../utils/IEmailSender";
+import { HashRepository } from "../../repositories/HashRepository";
+import { Hash } from "../../entity/Hash";
+import { HashService } from "../../services/HashService";
+import { IHashService } from "../../services/interfaces/IHashService";
 
 let DIContainer =  new Container();
 
@@ -68,6 +72,7 @@ DIContainer.bind<IBaseService<Role>>(TYPES.RoleService).to(RoleService);
 DIContainer.bind<IBaseService<Section>>(TYPES.SectionService).to(SectionService);
 DIContainer.bind<IBaseService<Tag>>(TYPES.TagService).to(TagService);
 DIContainer.bind<IBaseService<UserSection>>(TYPES.UserSectionService).to(UserSectionService);
+DIContainer.bind<IHashService>(TYPES.HashService).to(HashService);
 
 // Repositories
 DIContainer.bind<IBaseRepository<User>>(TYPES.UserRepository).to(UserRepository);
@@ -79,6 +84,7 @@ DIContainer.bind<IBaseRepository<Role>>(TYPES.RoleRepository).to(RoleRepository)
 DIContainer.bind<IBaseRepository<Section>>(TYPES.SectionRepository).to(SectionRepository);
 DIContainer.bind<IBaseRepository<Tag>>(TYPES.TagRepository).to(TagRepository);
 DIContainer.bind<IBaseRepository<UserSection>>(TYPES.UserSectionRepository).to(UserSectionRepository);
+DIContainer.bind<IBaseRepository<Hash>>(TYPES.HashRepository).to(HashRepository);
 
 // Entities
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.User).whenTargetNamed(Entity.User);
@@ -90,6 +96,7 @@ DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Role).
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Section).whenTargetNamed(Entity.Section);
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Tag).whenTargetNamed(Entity.Tag);
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.UserSection).whenTargetNamed(Entity.UserSection);
+DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Hash).whenTargetNamed(Entity.Hash);
 
 // Shared
 DIContainer.bind<IEmailSender>(TYPES.EmailSender).to(EmailSender);

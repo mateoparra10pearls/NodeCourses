@@ -7,7 +7,8 @@ export const Entity = {
   Category: "Category",
   CategoryType: "CategoryType",
   Tag: "CategoryType",
-  CourseTag: "CourseTag"
+  CourseTag: "CourseTag",
+  Hash: "Hash"
 }
 
 export const ErrorMessages = {

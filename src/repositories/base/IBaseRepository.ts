@@ -15,4 +15,5 @@ export interface IBaseRepository<T> {
     findOne(id: number): Promise<T>;
     save(item: T): Promise<T>;
     delete(id: number): Promise<T>;
+    findObject(obj:any): Promise<T[]>;
 }
