@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { PrimaryGeneratedColumn, Column } from "typeorm";
 
 class BaseEntityApp {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

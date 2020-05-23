@@ -30,6 +30,7 @@ class App {
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
+      // console.log(`Sengrid Key: ${process.env.SENDGRID_API_KEY}`);
     });
   }
 }

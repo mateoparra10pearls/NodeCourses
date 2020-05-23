@@ -1,10 +1,8 @@
-import "reflect-metadata";
 import App from "./App";
 import { TYPES } from "./shared/dependencies/Types";
 import { DIContainer } from "./shared/dependencies/Container";
 import { createConnection } from "typeorm";
 import { IBaseController } from "./controllers/base/IBaseController";
-import { User } from "./entity/User";
 
 const initialize = () => {
   createConnection()

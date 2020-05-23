@@ -5,7 +5,7 @@ import BaseEntityApp from "../../shared/database/BaseEntityApp";
 
 @injectable()
 abstract class BaseService<T> implements IBaseService<T> {
-  private _repository: IBaseRepository<T>;
+  public _repository: IBaseRepository<T>;
   constructor(repo: IBaseRepository<T>) {
     this._repository = repo;
   }

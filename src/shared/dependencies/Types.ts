@@ -1,7 +1,15 @@
 const TYPES = {
     // Controllers
     UserController: Symbol.for("UserController"),
+    CategoryController: Symbol.for("CategoryController"),
+    CategoryTypeController: Symbol.for("CategoryTypeController"),
+    CourseController: Symbol.for("CourseController"),
+    CourseTagController: Symbol.for("CourseTagController"),
     RoleController: Symbol.for("RoleController"),
+    SectionController: Symbol.for("SectionController"),
+    TagController: Symbol.for("TagController"),
+    UserSectionController: Symbol.for("UserSectionController"),
+
     
     // Repositories
     UserRepository: Symbol.for("UserRepository"),
@@ -26,7 +34,9 @@ const TYPES = {
     UserSectionService: Symbol.for("UserSectionService"),
 
     //Shared
-    ConfigEntity: Symbol.for("ConfigEntity")
+    ConfigEntity: Symbol.for("ConfigEntity"),
+    EmailSender: Symbol.for("EmailSender"),
+
     
 };
  

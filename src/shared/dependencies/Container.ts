@@ -1,28 +1,36 @@
 import { Container } from "inversify";
-import { UserRepository } from "../../repositories/UserRepository";
 import { TYPES } from "./Types";
-import { Entity } from "../Constants";
+import { IBaseController } from "../../controllers/base/IBaseController";
+import RoleController from "../../controllers/RoleController";
+import CategoryController from "../../controllers/CategoryController";
+import CategoryTypeController from "../../controllers/CategoryTypeController";
+import CourseController from "../../controllers/CourseController";
+import CourseTagController from "../../controllers/CourseTagController";
+import SectionController from "../../controllers/SectionController";
+import TagController from "../../controllers/TagController";
 import UserController from "../../controllers/UserController";
-import { UserService } from "../../services/UserService";
+import UserSectionController from "../../controllers/UserSectionController";
 import { IBaseRepository } from "../../repositories/base/IBaseRepository";
+import { UserRepository } from "../../repositories/UserRepository";
+import { CategoryRepository } from "../../repositories/CategoryRepository";
+import { CategoryTypeRepository } from "../../repositories/CategoryTypeRepository";
+import { CourseRepository } from "../../repositories/CourseRepository";
+import { CourseTagRepository } from "../../repositories/CourseTagRepository";
+import { RoleRepository } from "../../repositories/RoleRepository";
+import { SectionRepository } from "../../repositories/SectionRepository";
+import { TagRepository } from "../../repositories/TagRepository";
+import { UserSectionRepository } from "../../repositories/UserSectionRepository";
+import { Entity } from "../Constants";
+import { UserService } from "../../services/UserService";
 import { User } from "../../entity/User";
 import { Category } from "../../entity/Category";
-import { CategoryRepository } from "../../repositories/CategoryRepository";
 import { CategoryType } from "../../entity/CategoryType";
-import { CategoryTypeRepository } from "../../repositories/CategoryTypeRepository";
 import { Course } from "../../entity/Course";
-import { CourseRepository } from "../../repositories/CourseRepository";
 import { CourseTag } from "../../entity/CourseTag";
-import { CourseTagRepository } from "../../repositories/CourseTagRepository";
 import { Role } from "../../entity/Role";
-import { RoleRepository } from "../../repositories/RoleRepository";
 import { Section } from "../../entity/Section";
-import { SectionRepository } from "../../repositories/SectionRepository";
 import { Tag } from "../../entity/Tag";
-import { TagRepository } from "../../repositories/TagRepository";
 import { UserSection } from "../../entity/UserSection";
-import { UserSectionRepository } from "../../repositories/UserSectionRepository";
-import { IBaseController } from "../../controllers/base/IBaseController";
 import { IBaseService } from "../../services/base/IBaseService";
 import { CategoryService } from "../../services/CategoryService";
 import { CategoryTypeService } from "../../services/CategoryTypeService";
@@ -32,7 +40,8 @@ import { RoleService } from "../../services/RoleService";
 import { SectionService } from "../../services/SectionService";
 import { TagService } from "../../services/TagService";
 import { UserSectionService } from "../../services/UserSectionService";
-import RoleController from "../../controllers/RoleController";
+import EmailSender from "../utils/EmailSender";
+import { IEmailSender } from "../utils/IEmailSender";
 
 let DIContainer =  new Container();
 
@@ -40,7 +49,14 @@ type ConfigEntity = string;
 
 // Controllers
 DIContainer.bind<IBaseController>(TYPES.UserController).to(UserController);
+DIContainer.bind<IBaseController>(TYPES.CategoryController).to(CategoryController);
+DIContainer.bind<IBaseController>(TYPES.CategoryTypeController).to(CategoryTypeController);
+DIContainer.bind<IBaseController>(TYPES.CourseController).to(CourseController);
+DIContainer.bind<IBaseController>(TYPES.CourseTagController).to(CourseTagController);
 DIContainer.bind<IBaseController>(TYPES.RoleController).to(RoleController);
+DIContainer.bind<IBaseController>(TYPES.SectionController).to(SectionController);
+DIContainer.bind<IBaseController>(TYPES.TagController).to(TagController);
+DIContainer.bind<IBaseController>(TYPES.UserSectionController).to(UserSectionController);
 
 // Services
 DIContainer.bind<IBaseService<User>>(TYPES.UserService).to(UserService);
@@ -75,6 +91,8 @@ DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Sectio
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.Tag).whenTargetNamed(Entity.Tag);
 DIContainer.bind<ConfigEntity>(TYPES.ConfigEntity).toConstantValue(Entity.UserSection).whenTargetNamed(Entity.UserSection);
 
+// Shared
+DIContainer.bind<IEmailSender>(TYPES.EmailSender).to(EmailSender);
 
 
 export { DIContainer }
