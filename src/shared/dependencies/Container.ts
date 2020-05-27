@@ -41,7 +41,7 @@ import { SectionService } from "../../services/SectionService";
 import { TagService } from "../../services/TagService";
 import { UserSectionService } from "../../services/UserSectionService";
 import EmailSender from "../utils/EmailSender";
-import { IEmailSender } from "../utils/IEmailSender";
+import { IEmailSender } from "../interfaces/IEmailSender";
 import { HashRepository } from "../../repositories/HashRepository";
 import { Hash } from "../../entity/Hash";
 import { HashService } from "../../services/HashService";
@@ -63,7 +63,6 @@ DIContainer.bind<IBaseController>(TYPES.TagController).to(TagController);
 DIContainer.bind<IBaseController>(TYPES.UserSectionController).to(UserSectionController);
 
 // Services
-DIContainer.bind<IBaseService<User>>(TYPES.UserService).to(UserService);
 DIContainer.bind<IBaseService<Category>>(TYPES.CategoryService).to(CategoryService);
 DIContainer.bind<IBaseService<CategoryType>>(TYPES.CategoryTypeService).to(CategoryTypeService);
 DIContainer.bind<IBaseService<Course>>(TYPES.CourseService).to(CourseService);
@@ -72,6 +71,7 @@ DIContainer.bind<IBaseService<Role>>(TYPES.RoleService).to(RoleService);
 DIContainer.bind<IBaseService<Section>>(TYPES.SectionService).to(SectionService);
 DIContainer.bind<IBaseService<Tag>>(TYPES.TagService).to(TagService);
 DIContainer.bind<IBaseService<UserSection>>(TYPES.UserSectionService).to(UserSectionService);
+DIContainer.bind<IBaseService<User>>(TYPES.UserService).to(UserService);
 DIContainer.bind<IHashService>(TYPES.HashService).to(HashService);
 
 // Repositories

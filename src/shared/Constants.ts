@@ -1,5 +1,5 @@
 export const Entity = {
-  User : "User",
+  User: "User",
   Course: "Course",
   Section: "Section",
   UserSection: "UserSection",
@@ -8,9 +8,10 @@ export const Entity = {
   CategoryType: "CategoryType",
   Tag: "CategoryType",
   CourseTag: "CourseTag",
-  Hash: "Hash"
-}
+  Hash: "Hash",
+};
 
-export const ErrorMessages = {
-  BadFormat: "Bad Format"
-}
+export const ErrorMessage = {
+  BadFormat: { code: 900, message: "Bad Format" },
+  UserAlreadyExist: { code: 901, message: "The email is already used" },
+};

@@ -1,4 +1,4 @@
-import { IEmailSender } from "./IEmailSender";
+import { IEmailSender } from "../interfaces/IEmailSender";
 import MailService from "@sendgrid/mail";
 import ClientResponse from "@sendgrid/helpers/classes/response";
 import { injectable } from "inversify";
@@ -8,14 +8,12 @@ class EmailSender implements IEmailSender {
   async sendMultipleEmail(
     receivers: string[],
     subject: string,
-    content: string,
     html: string,
     hideReceiversFromEachOther: boolean
   ): Promise<any> {
     return await this.send(
       receivers,
       subject,
-      content,
       html,
       hideReceiversFromEachOther
     );
@@ -24,16 +22,14 @@ class EmailSender implements IEmailSender {
   async sendEmail(
     receiver: string,
     subject: string,
-    content: string,
     html: string
   ): Promise<any> {
-    return await this.send([receiver], subject, content, html, false);
+    return await this.send([receiver], subject, html, false);
   }
 
   private async send(
     receivers: string[],
     subject: string,
-    content: string,
     html: string,
     hideReceiversFromEachOther: boolean
   ): Promise<any> {
@@ -43,7 +39,7 @@ class EmailSender implements IEmailSender {
         to: receivers,
         from: process.env.SENDGRID_EMAIL_FROM,
         subject: subject,
-        text: content
+        html: html
       };
 
       if (hideReceiversFromEachOther) {

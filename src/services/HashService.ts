@@ -20,9 +20,6 @@ class HashService extends BaseService<Hash> implements IHashService{
         idEntity,
         idHashTable: 1
       }; 
-      // entityInfo.idHashTable = 0;
-      // entityInfo.idEntity = idEntity;
-      // entityInfo.entityType = entityType;
 
       let hash = new Hash();
       hash.hashCode = Guid.create().toString();
@@ -32,15 +29,14 @@ class HashService extends BaseService<Hash> implements IHashService{
 
     public async getHashInfo(hashCode: string): Promise<IHashEntityInfo> {
       const hashList = <Hash[]>await this._repository.findObject({ hashCode });
-      if (hashList && hashList.length > 0 && hashList[0]) {
+      if (hashList && hashList.length > 0 && hashList[0] && hashList[0].entityInfo) {
         let entityInfo = <IHashEntityInfo>JSON.parse(hashList[0].entityInfo);
         const id = Number(hashList[0].id);
         entityInfo.idHashTable = isNaN(id) ? 0 : id;
         return entityInfo;
       }
       
-      const info: IHashEntityInfo = { entityType : 0, idEntity : 0, idHashTable: 0 }; 
-      return info;
+      return { entityType : 0, idEntity : 0, idHashTable: 0 }; 
     }
 }
 

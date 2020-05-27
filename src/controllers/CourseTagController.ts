@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../shared/dependencies/Types";
-import { ErrorMessages } from "../shared/Constants";
+import { ErrorMessage } from "../shared/Constants";
 import { IBaseController } from "./base/IBaseController";
 import { IBaseService } from "../services/base/IBaseService";
 import { CourseTag } from "../entity/CourseTag";
+import { IResponseApp } from "../shared/interfaces/IResponseApp";
 
 @injectable()
 class CourseTagController implements IBaseController {
@@ -30,9 +31,15 @@ class CourseTagController implements IBaseController {
 
   getOne = async (req: Request, res: Response): Promise<any> => {
     // Retrieve the tag from our URL path
+    // Retrieve the tag from our URL path
     const id = Number(req.params.id);
-    if (isNaN(id)){
-      return res.status(400).json(ErrorMessages.BadFormat);
+    if (isNaN(id)) {
+      return res.status(400).json(<IResponseApp>{
+        error: {
+          code: ErrorMessage.BadFormat.code,
+          message: ErrorMessage.BadFormat.message,
+        },
+      });
     }
 
     const result = await this._service.getOne(id);

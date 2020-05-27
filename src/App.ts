@@ -3,6 +3,7 @@ import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import morgan = require("morgan");
 import { createConnection } from "typeorm";
+import { SetResponseObject } from "./shared/middleware/ResponseHandler";
 
 class App {
   public app: express.Application;
@@ -23,6 +24,7 @@ class App {
 
   private initializeControllers(controllers: any) {
     controllers.forEach((controller: any) => {
+      this.app.use(SetResponseObject);
       this.app.use("/api", controller.router);
     });
   }

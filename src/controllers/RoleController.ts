@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../shared/dependencies/Types";
-import { ErrorMessages } from "../shared/Constants";
+import { ErrorMessage } from "../shared/Constants";
 import { IBaseController } from "./base/IBaseController";
 import { IBaseService } from "../services/base/IBaseService";
 import { Role } from "../entity/Role";
+import { IResponseApp } from "../shared/interfaces/IResponseApp";
 
 @injectable()
 class RoleController implements IBaseController {
@@ -32,7 +33,10 @@ class RoleController implements IBaseController {
     // Retrieve the tag from our URL path
     const id = Number(req.params.id);
     if (isNaN(id)){
-      return res.status(400).json(ErrorMessages.BadFormat);
+      return res.status(400).json(<IResponseApp> { error: {
+        code: ErrorMessage.BadFormat.code,
+        message: ErrorMessage.BadFormat.message
+      } });
     }
 
     const result = await this._service.getOne(id);
