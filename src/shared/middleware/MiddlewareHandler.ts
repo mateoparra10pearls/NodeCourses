@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Send } from "express";
 import { IResponseApp } from "../interfaces/IResponseApp";
-import { Any } from "typeorm";
+import { Commonvalidations } from "../utils/CommonFunctions";
 
 export function SetResponseObject(
   req: Request,
@@ -23,4 +23,22 @@ export function SetResponseObject(
   };
 
   next();
+}
+
+export function SetRequestValidations(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const json = req.body;
+  console.log("checking...");
+  
+  const isValid = Commonvalidations.checkObject(json);
+
+  if (isValid) {
+    next();
+  } else {
+    res.status(404).send({ message: "Not found" });
+  }
+
 }

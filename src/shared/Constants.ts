@@ -14,4 +14,5 @@ export const Entity = {
 export const ErrorMessage = {
   BadFormat: { code: 900, message: "Bad Format" },
   UserAlreadyExist: { code: 901, message: "The email is already used" },
+  invalidPassword: { code: 902, message: "Passowrds provided must match and have betwween 6 and 30 characters." }
 };

@@ -4,20 +4,20 @@ import { TYPES } from "../shared/dependencies/Types";
 import { ErrorMessage } from "../shared/Constants";
 import { User } from "../entity/User";
 import { IBaseController } from "./base/IBaseController";
-import { IBaseService } from "../services/base/IBaseService";
-import { Hash } from "../entity/Hash";
 import { IHashService } from "../services/interfaces/IHashService";
 import { IResponseApp } from "../shared/interfaces/IResponseApp";
+import { IUserPassword } from "../shared/interfaces/IUserPassword";
+import { IUserService } from "../services/interfaces/IUserService";
 
 @injectable()
 class UserController implements IBaseController {
   public path = "/users";
   public router = express.Router();
-  private _userService: IBaseService<User>;
+  private _userService: IUserService;
   private _hashService: IHashService;
 
   constructor(
-    @inject(TYPES.UserService) userService: IBaseService<User>,
+    @inject(TYPES.UserService) userService: IUserService,
     @inject(TYPES.UserService) hashService: IHashService
   ) {
     this.intializeRoutes();
@@ -30,6 +30,8 @@ class UserController implements IBaseController {
     this.router.get(this.path + "/getHashInfo/:hash", this.get);
     this.router.get(this.path + "/:id", this.getOne);
     this.router.post(this.path, this.save);
+    this.router.post(this.path + "/savePassword", this.savePassword);
+    this.router.post(this.path + "/login", this.login);
   };
 
   getHashInfo = async (req: Request, res: Response): Promise<any> => {
@@ -62,11 +64,29 @@ class UserController implements IBaseController {
     return res.json(result);
   };
 
-  save = async (req: Request, res: Response): Promise<any> => {
+  login = async (req: Request, res: Response): Promise<any> => {
     // Retrieve the tag from our URL path
     let result: any;
     const body = <User>req.body;
     result = <User>await this._userService.save(body);
+    return res.json(result);
+  };
+
+  save = async (req: Request, res: Response): Promise<any> => {
+    console.log("***controller***");
+    
+    // Retrieve the tag from our URL path
+    let result: any;
+    const body = <User>req.body;
+    result = <User>await this._userService.save(body);
+    return res.json(result);
+  };
+
+  savePassword = async (req: Request, res: Response): Promise<any> => {
+    // Retrieve the tag from our URL path
+    let result: any;
+    const body = <IUserPassword>req.body;
+    result = <User>await this._userService.savePassword(body);
     return res.json(result);
   };
 }
