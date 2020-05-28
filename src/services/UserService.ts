@@ -40,10 +40,10 @@ class UserService extends BaseService<User> implements IUserService {
     );
     if (userList && userList.length > 0)
       return <IResponseApp>{
-        error: {
+        errorList: [{
           code: ErrorMessage.UserAlreadyExist.code,
           message: ErrorMessage.UserAlreadyExist.message,
-        },
+        }],
       };
 
     const result = <User>await this._repository.save(user);
@@ -55,27 +55,9 @@ class UserService extends BaseService<User> implements IUserService {
   };
 
   savePassword = async (userPassword: IUserPassword) => {
-    if (true) {
-      const user = await this._repository.findOne(userPassword.id);
-      if (user) {
-        user.password = this.encryptPassword(userPassword.password);
-        return await this._repository.save(user);
-      } else {
-        return <IResponseApp>{
-          error: {
-            code: ErrorMessage.BadFormat.code,
-            message: ErrorMessage.BadFormat.message,
-          },
-        };
-      }
-    } 
-
-    return <IResponseApp>{
-      error: {
-        code: ErrorMessage.BadFormat.code,
-        message: ErrorMessage.BadFormat.message,
-      },
-    };
+    const user = await this._repository.findOne(userPassword.id);
+    user.password = this.encryptPassword(userPassword.password);
+    return await this._repository.save(user);
   };
 
   // Private methods (Not included in the Interface or BaseService)

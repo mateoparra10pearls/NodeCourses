@@ -1,6 +1,6 @@
 export interface IResponseApp {
   result: any,
-  error: IErrorObj;
+  errorList: IErrorObj[];
 }
 
 export interface IErrorObj {

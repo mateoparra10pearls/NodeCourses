@@ -14,5 +14,35 @@ export const Entity = {
 export const ErrorMessage = {
   BadFormat: { code: 900, message: "Bad Format" },
   UserAlreadyExist: { code: 901, message: "The email is already used" },
-  invalidPassword: { code: 902, message: "Passowrds provided must match and have betwween 6 and 30 characters." }
+  InvalidPassword: {
+    code: 902,
+    message:
+      "Passowrds provided must match and have between 6 and 30 characters.",
+  },
+  BadEmailFormat: {
+    code: 903,
+    message:
+      "Email must be written in a proper format (Ex: testemail@domain.com)",
+  },
+  BadLengthFormat: {
+    code: 904,
+    message : "Check length",
+    getMessage: (propertyName: string, min: number, max?: number) => {
+      if (max) {
+        return `The property ${propertyName} must have min ${min} and max ${max} characters.`;
+      } else {
+        return `The property ${propertyName} must have min ${min} characters.`;
+      }
+    }
+  },
+};
+
+export const RequestPaths = {
+  // Users
+  User_GetAll: "/users/getAll",
+  User_GetOne: "/users/getUser/:id",
+  User_GetHashInfo: "/users/getHashInfo/:hash",
+  User_Save: "/users/saveUser",
+  User_SavePassword: "/users/savePassword",
+  User_Login: "/users/login",
 };

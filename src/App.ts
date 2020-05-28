@@ -2,8 +2,7 @@ import express = require("express");
 import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import morgan = require("morgan");
-import { createConnection } from "typeorm";
-import { SetResponseObject, SetRequestValidations } from "./shared/middleware/MiddlewareHandler";
+import { SetResponseObject } from "./shared/middleware/MiddlewareHandler";
 
 class App {
   public app: express.Application;
@@ -24,16 +23,14 @@ class App {
 
   private initializeControllers(controllers: any) {
     controllers.forEach((controller: any) => {
-      this.app.use(SetResponseObject);
-      this.app.use(SetRequestValidations);
       this.app.use("/api", controller.router);
+      this.app.use(SetResponseObject);
     });
   }
 
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
-      // console.log(`Sengrid Key: ${process.env.SENDGRID_API_KEY}`);
     });
   }
 }

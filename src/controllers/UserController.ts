@@ -1,17 +1,18 @@
 import express, { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../shared/dependencies/Types";
-import { ErrorMessage } from "../shared/Constants";
+import { ErrorMessage, RequestPaths } from "../shared/Constants";
 import { User } from "../entity/User";
 import { IBaseController } from "./base/IBaseController";
 import { IHashService } from "../services/interfaces/IHashService";
 import { IResponseApp } from "../shared/interfaces/IResponseApp";
 import { IUserPassword } from "../shared/interfaces/IUserPassword";
 import { IUserService } from "../services/interfaces/IUserService";
+import { Validations } from "../shared/utils/CommonFunctions";
 
 @injectable()
 class UserController implements IBaseController {
-  public path = "/users";
+  //public path = "/users";
   public router = express.Router();
   private _userService: IUserService;
   private _hashService: IHashService;
@@ -26,12 +27,16 @@ class UserController implements IBaseController {
   }
 
   intializeRoutes = () => {
-    this.router.get(this.path, this.get);
-    this.router.get(this.path + "/getHashInfo/:hash", this.get);
-    this.router.get(this.path + "/:id", this.getOne);
-    this.router.post(this.path, this.save);
-    this.router.post(this.path + "/savePassword", this.savePassword);
-    this.router.post(this.path + "/login", this.login);
+    this.router.get(RequestPaths.User_GetAll, this.get);
+    this.router.get(RequestPaths.User_GetHashInfo, this.getHashInfo);
+    this.router.get(RequestPaths.User_GetOne, this.getOne);
+    this.router.post(
+      RequestPaths.User_Save,
+      Validations.validate_User,
+      this.save
+    );
+    this.router.post(RequestPaths.User_SavePassword, this.savePassword);
+    this.router.post(RequestPaths.User_Login, this.login);
   };
 
   getHashInfo = async (req: Request, res: Response): Promise<any> => {
@@ -52,10 +57,10 @@ class UserController implements IBaseController {
     let result: any;
     if (isNaN(id)) {
       result = <IResponseApp>{
-        error: {
+        errorList: [{
           code: ErrorMessage.BadFormat.code,
           message: ErrorMessage.BadFormat.message,
-        },
+        }],
       };
     } else {
       result = await this._userService.getOne(id);
@@ -65,7 +70,6 @@ class UserController implements IBaseController {
   };
 
   login = async (req: Request, res: Response): Promise<any> => {
-    // Retrieve the tag from our URL path
     let result: any;
     const body = <User>req.body;
     result = <User>await this._userService.save(body);
@@ -73,9 +77,8 @@ class UserController implements IBaseController {
   };
 
   save = async (req: Request, res: Response): Promise<any> => {
-    console.log("***controller***");
+    console.log("users controller");
     
-    // Retrieve the tag from our URL path
     let result: any;
     const body = <User>req.body;
     result = <User>await this._userService.save(body);
@@ -83,7 +86,6 @@ class UserController implements IBaseController {
   };
 
   savePassword = async (req: Request, res: Response): Promise<any> => {
-    // Retrieve the tag from our URL path
     let result: any;
     const body = <IUserPassword>req.body;
     result = <User>await this._userService.savePassword(body);
