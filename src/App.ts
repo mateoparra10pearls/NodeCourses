@@ -23,8 +23,8 @@ class App {
 
   private initializeControllers(controllers: any) {
     controllers.forEach((controller: any) => {
-      this.app.use("/api", controller.router);
       this.app.use(SetResponseObject);
+      this.app.use("/api", controller.router);
     });
   }
 

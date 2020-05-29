@@ -8,11 +8,14 @@ import { IHashService } from "./interfaces/IHashService";
 import { EntityEnum } from "../shared/enums/EntityEnum";
 import { IEmailSender } from "../shared/interfaces/IEmailSender";
 import { Templates } from "../shared/Templates";
-import { IResponseApp } from "../shared/interfaces/IResponseApp";
 import { ErrorMessage } from "../shared/Constants";
 import { IUserPassword } from "../shared/interfaces/IUserPassword";
-import CryptoJS from "crypto-js";
+import bcrypt from "bcrypt";
 import { IUserService } from "./interfaces/IUserService";
+import { IHashEntityInfo } from "../shared/interfaces/IHashEntityInfo";
+import { Validations } from "../shared/utils/CommonFunctions";
+import { IUserLogin } from "../shared/interfaces/IUserLogin";
+import jwt from "jsonwebtoken";
 
 @injectable()
 class UserService extends BaseService<User> implements IUserService {
@@ -28,55 +31,71 @@ class UserService extends BaseService<User> implements IUserService {
     this._emailSender = emailSender;
   }
 
-  save = async (user: User) => {
-    let isCreating = true;
-    if (user.id && user.id > 0) {
-      isCreating = false;
-      // Encrypt password
+  login = async (loginDto: IUserLogin) => {
+    const user = await this._repository.findObject({ email: loginDto.email }); //, false,  ["Role"]);
+    if (user) {
+      const isValid = await this.isvalidPassword(loginDto.password, user.password!);
+      if (isValid) {
+        return this.generateToken(user);
+      }
+
+      return Validations.returnSingleError(ErrorMessage.WrongPassword);
     }
 
-    let userList = <User[]>(
-      await this._repository.findObject({ email: user.email! })
-    );
-    if (userList && userList.length > 0)
-      return <IResponseApp>{
-        errorList: [{
-          code: ErrorMessage.UserAlreadyExist.code,
-          message: ErrorMessage.UserAlreadyExist.message,
-        }],
-      };
+    return Validations.returnSingleError(ErrorMessage.NotFoundEmail);
+  };
+
+  save = async (user: User) => {
+    let userDb = <User>await this._repository.findObject({ email: user.email! });
+
+    if (userDb) return Validations.returnSingleError(ErrorMessage.UserAlreadyExist);
 
     const result = <User>await this._repository.save(user);
-    if (isCreating) {
-      await this.requestPasswordEmail(result);
-    }
-
+    await this.requestPasswordEmail(result);
     return result;
   };
 
   savePassword = async (userPassword: IUserPassword) => {
-    const user = await this._repository.findOne(userPassword.id);
-    user.password = this.encryptPassword(userPassword.password);
-    return await this._repository.save(user);
+    const hashInfo = <IHashEntityInfo>await this._hashService.getHashInfo(userPassword.hashCode);
+
+    if (hashInfo && hashInfo.entityType === EntityEnum.User) {
+      const user = await this._repository.findOne(hashInfo.idEntity);
+
+      if (user) {
+        user.password = await this.encryptPassword(userPassword.password);
+        await this._repository.save(user);
+        await this._hashService.deleteHashByHashCode(userPassword.hashCode);
+        return this.generateToken(user);
+      }
+    }
+
+    return Validations.returnSingleError(ErrorMessage.NotFoundHash);
   };
 
-  // Private methods (Not included in the Interface or BaseService)
+  /**
+   * Private methods (Not included in the Interface or BaseService)
+   *
+   */
 
-  encryptPassword = (password: string) => {
-    return CryptoJS.AES.encrypt(
-      password,
-      process.env.SECRET_KEY_APP || "Not Secure Key"
-    ).toString();
+  generateToken = (user: User) => {
+    const token = jwt.sign(
+      { idUser: user.id, idRole: user.idRole },
+      process.env.APP_JWT_TOKEN || "Not Secured"
+    );
+    return token;
   };
 
-  isvalidPassword = (password: string, encryptedPassword: string) => {
-    return this.encryptPassword(password) === encryptedPassword;
+  encryptPassword = async (password: string) => {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(process.env.SECRET_KEY_APP + password, salt);
+  };
+
+  isvalidPassword = async (password: string, encryptedPassword: string) => {
+    return await bcrypt.compare(process.env.SECRET_KEY_APP + password, encryptedPassword);
   };
 
   requestPasswordEmail = async (userSaved: User) => {
-    const hash = <Hash>(
-      await this._hashService.createHash(userSaved.id!, EntityEnum.User)
-    );
+    const hash = <Hash>await this._hashService.createHash(userSaved.id!, EntityEnum.User);
     const subject = Templates.userCreatedSubject();
     const body = Templates.userCreatedBody(
       userSaved.firstName + " " + userSaved.lastName,

@@ -11,9 +11,10 @@ Example:
         DIContainer.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
 */
 export interface IBaseRepository<T> {
-    findAll(): Promise<T[]>;
-    findOne(id: number): Promise<T>;
+    findAll(includeDeteled?:boolean): Promise<T[]>;
+    findOne(idEntity: number, includeDeteled?:boolean, relations?: string[]): Promise<T>;
+    findObject(objQuery:any, includeDeteled?:boolean, relations?: string[]): Promise<T>;
+    findObjectList(objQuery:any, includeDeteled?:boolean): Promise<T[]>;
     save(item: T): Promise<T>;
-    delete(id: number): Promise<T>;
-    findObject(obj:any): Promise<T[]>;
+    delete(idEntity: number): Promise<T>;
 }

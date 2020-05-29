@@ -7,6 +7,6 @@ export const Templates = {
   userCreatedBody(name: string, hash: string) : string {
     return `<h1>Welcome ${name},</h1>
     <p>There is only one remaining step, you need to set you password,</p>
-    <a href="${process.env.MAIN_PAGE_URL}/users/setPassword/${hash}">Click here!</a>`;
+    <a href="${process.env.APP_MAIN_PAGE_URL}/users/setPassword/${hash}">Click here!</a>`;
   },
 };

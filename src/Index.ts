@@ -9,6 +9,7 @@ const initialize = () => {
     .then(() => {
       const app = new App(
         [DIContainer.get<IBaseController>(TYPES.UserController),
+          DIContainer.get<IBaseController>(TYPES.CategoryController),
           DIContainer.get<IBaseController>(TYPES.RoleController)],
         5000
       );

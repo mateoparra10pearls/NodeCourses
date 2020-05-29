@@ -3,7 +3,8 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany
+  OneToMany,
+  Index
 } from "typeorm";
 import { Role } from "./Role";
 import { UserSection } from "./UserSection";
@@ -23,9 +24,12 @@ export class User extends BaseEntityApp{
   @Column("varchar", { name: "password", nullable: true, length: 500 })
   password: string | null | undefined;
 
+  @Column({ type: "int", name: "idRole" })
+  idRole: number | undefined;
+
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn([{ name: "idRole", referencedColumnName: "id" }])
-  idRole: Role | undefined;
+  Role: Role | undefined;
 
   @OneToMany(() => UserSection, (userSection) => userSection.idUser)
   userSections: UserSection[] | undefined;

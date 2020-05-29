@@ -9,35 +9,41 @@ import { IHashEntityInfo } from "../shared/interfaces/IHashEntityInfo";
 import { IHashService } from "./interfaces/IHashService";
 
 @injectable()
-class HashService extends BaseService<Hash> implements IHashService{
-    constructor(@inject(TYPES.HashRepository) repo: IBaseRepository<Hash>) {
-      super(repo);      
+class HashService extends BaseService<Hash> implements IHashService {
+  constructor(@inject(TYPES.HashRepository) repo: IBaseRepository<Hash>) {
+    super(repo);
+  }
+
+  public async deleteHashByHashCode(hashCode: string): Promise<void> {
+    const hash = <Hash>await this._repository.findObject({ hashCode });
+    if (hash) {
+      await this._repository.delete(hash.id!);
+    }
+  }
+
+  public async createHash(idEntity: number, entityType: number): Promise<Hash> {
+    const entityInfo: IHashEntityInfo = {
+      entityType,
+      idEntity,
+      idHashTable: 1,
+    };
+
+    let hash = new Hash();
+    hash.hashCode = Guid.create().toString();
+    hash.entityInfo = JSON.stringify(entityInfo);
+    return await this._repository.save(hash);
+  }
+
+  public async getHashInfo(hashCode: string): Promise<IHashEntityInfo> {
+    const hash = <Hash>await this._repository.findObject({hashCode: hashCode});
+    if (hash && hash.entityInfo) {
+      let entityInfo = <IHashEntityInfo>JSON.parse(hash.entityInfo);
+      entityInfo.idHashTable = hash.id!;
+      return entityInfo;
     }
 
-    public async createHash(idEntity: number, entityType: number): Promise<Hash> {
-      const entityInfo: IHashEntityInfo = {
-        entityType,
-        idEntity,
-        idHashTable: 1
-      }; 
-
-      let hash = new Hash();
-      hash.hashCode = Guid.create().toString();
-      hash.entityInfo = JSON.stringify(entityInfo);
-      return await this._repository.save(hash);
-    }
-
-    public async getHashInfo(hashCode: string): Promise<IHashEntityInfo> {
-      const hashList = <Hash[]>await this._repository.findObject({ hashCode });
-      if (hashList && hashList.length > 0 && hashList[0] && hashList[0].entityInfo) {
-        let entityInfo = <IHashEntityInfo>JSON.parse(hashList[0].entityInfo);
-        const id = Number(hashList[0].id);
-        entityInfo.idHashTable = isNaN(id) ? 0 : id;
-        return entityInfo;
-      }
-      
-      return { entityType : 0, idEntity : 0, idHashTable: 0 }; 
-    }
+    return { entityType: 0, idEntity: 0, idHashTable: 0 };
+  }
 }
 
 export { HashService };

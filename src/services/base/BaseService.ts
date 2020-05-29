@@ -13,8 +13,8 @@ abstract class BaseService<T> implements IBaseService<T> {
     return await this._repository.findAll();
   };
 
-  getOne = async (id: number): Promise<any> => {
-    return await this._repository.findOne(id);
+  getOne = async (id: number, includeDeteled: boolean = false, relations : string[] = []): Promise<any> => {
+    return await this._repository.findOne(id, includeDeteled, relations);
   };
 
   save = async (item: T): Promise<any> => {

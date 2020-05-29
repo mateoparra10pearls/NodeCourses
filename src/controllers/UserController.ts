@@ -5,10 +5,11 @@ import { ErrorMessage, RequestPaths } from "../shared/Constants";
 import { User } from "../entity/User";
 import { IBaseController } from "./base/IBaseController";
 import { IHashService } from "../services/interfaces/IHashService";
-import { IResponseApp } from "../shared/interfaces/IResponseApp";
 import { IUserPassword } from "../shared/interfaces/IUserPassword";
 import { IUserService } from "../services/interfaces/IUserService";
 import { Validations } from "../shared/utils/CommonFunctions";
+import { IUserLogin } from "../shared/interfaces/IUserLogin";
+import { SecureRequestToken } from "../shared/middleware/MiddlewareHandler";
 
 @injectable()
 class UserController implements IBaseController {
@@ -27,16 +28,16 @@ class UserController implements IBaseController {
   }
 
   intializeRoutes = () => {
-    this.router.get(RequestPaths.User_GetAll, this.get);
+    this.router.get(RequestPaths.User_GetAll, SecureRequestToken, this.get);
     this.router.get(RequestPaths.User_GetHashInfo, this.getHashInfo);
-    this.router.get(RequestPaths.User_GetOne, this.getOne);
+    this.router.get(RequestPaths.User_GetOne, SecureRequestToken, this.getOne);
+    this.router.post(RequestPaths.User_Save, Validations.validate_User, this.save);
     this.router.post(
-      RequestPaths.User_Save,
-      Validations.validate_User,
-      this.save
+      RequestPaths.User_SavePassword,
+      Validations.validate_IUserPassword,
+      this.savePassword
     );
-    this.router.post(RequestPaths.User_SavePassword, this.savePassword);
-    this.router.post(RequestPaths.User_Login, this.login);
+    this.router.post(RequestPaths.User_Login, Validations.validate_IUserLogin, this.login);
   };
 
   getHashInfo = async (req: Request, res: Response): Promise<any> => {
@@ -52,16 +53,10 @@ class UserController implements IBaseController {
   };
 
   getOne = async (req: Request, res: Response): Promise<any> => {
-    // Retrieve the tag from our URL path
     const id = Number(req.params.id);
     let result: any;
     if (isNaN(id)) {
-      result = <IResponseApp>{
-        errorList: [{
-          code: ErrorMessage.BadFormat.code,
-          message: ErrorMessage.BadFormat.message,
-        }],
-      };
+      result = Validations.returnSingleError(ErrorMessage.BadFormat);
     } else {
       result = await this._userService.getOne(id);
     }
@@ -71,24 +66,22 @@ class UserController implements IBaseController {
 
   login = async (req: Request, res: Response): Promise<any> => {
     let result: any;
-    const body = <User>req.body;
-    result = <User>await this._userService.save(body);
+    const body = <IUserLogin>req.body;
+    result = await this._userService.login(body);
     return res.json(result);
   };
 
   save = async (req: Request, res: Response): Promise<any> => {
-    console.log("users controller");
-    
     let result: any;
     const body = <User>req.body;
-    result = <User>await this._userService.save(body);
+    result = await this._userService.save(body);
     return res.json(result);
   };
 
   savePassword = async (req: Request, res: Response): Promise<any> => {
     let result: any;
     const body = <IUserPassword>req.body;
-    result = <User>await this._userService.savePassword(body);
+    result = <User>await this._userService.savePassword(body);    
     return res.json(result);
   };
 }

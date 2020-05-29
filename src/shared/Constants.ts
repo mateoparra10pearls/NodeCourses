@@ -14,7 +14,7 @@ export const Entity = {
 export const ErrorMessage = {
   BadFormat: { code: 900, message: "Bad Format" },
   UserAlreadyExist: { code: 901, message: "The email is already used" },
-  InvalidPassword: {
+  BadPasswordFormat: {
     code: 902,
     message:
       "Passowrds provided must match and have between 6 and 30 characters.",
@@ -35,14 +35,40 @@ export const ErrorMessage = {
       }
     }
   },
+  NotFoundHash: {
+    code: 905,
+    message:
+      "The hash code provided does not exist.",
+  },
+  NotFoundEmail : {
+    code: 906,
+    message:
+      "The email entered was not found.",
+  },
+  WrongPassword: {
+    code: 907,
+    message:
+      "Wrong password.",
+  },
+
 };
 
 export const RequestPaths = {
   // Users
   User_GetAll: "/users/getAll",
-  User_GetOne: "/users/getUser/:id",
+  User_GetOne: "/users/get/:id",
   User_GetHashInfo: "/users/getHashInfo/:hash",
-  User_Save: "/users/saveUser",
+  User_Save: "/users/save",
   User_SavePassword: "/users/savePassword",
   User_Login: "/users/login",
+  // Categories
+  Category_GetAll: "/categories/getAll",
+  Category_GetOne: "/categories/get/:id",
+  Category_Save: "/categories/save"
+
+};
+
+export const Roles = {
+  Admin : "Admin",
+  RegularUser : "RegularUser"
 };

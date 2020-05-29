@@ -9,8 +9,8 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
+        "typeRoots": ["./src/shared/typings", "./node_modules/@types"],
         "types": ["reflect-metadata", "node"],
-
         "forceConsistentCasingInFileNames": true,
         "strict": true
     }

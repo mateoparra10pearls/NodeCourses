@@ -6,6 +6,7 @@ import { IBaseController } from "./base/IBaseController";
 import { IBaseService } from "../services/base/IBaseService";
 import { CategoryType } from "../entity/CategoryType";
 import { IResponseApp } from "../shared/interfaces/IResponseApp";
+import { Validations } from "../shared/utils/CommonFunctions";
 
 @injectable()
 class CategoryTypeController implements IBaseController {
@@ -33,12 +34,7 @@ class CategoryTypeController implements IBaseController {
     // Retrieve the tag from our URL path
     const id = Number(req.params.id);
     if (isNaN(id)) {
-      return res.status(400).json(<IResponseApp>{
-        error: {
-          code: ErrorMessage.BadFormat.code,
-          message: ErrorMessage.BadFormat.message,
-        },
-      });
+      return res.status(400).json(Validations.returnSingleError(ErrorMessage.BadFormat));
     }
 
     const result = await this._service.getOne(id);
