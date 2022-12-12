@@ -9,7 +9,7 @@
     "bcrypt": "^4.0.1",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "guid-typescript": "^1.0.9",
     "inversify": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
